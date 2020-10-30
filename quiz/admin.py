@@ -9,7 +9,6 @@ class ChoiceInline(admin.TabularInline):
 
 class QuestionAdmin(admin.ModelAdmin):
     fieldsets = []
-
     # inlines = [ChoiceInline]
 
 
