@@ -1,0 +1,9 @@
+<h1> Results from quiz</h1>
+
+    {% include "quiz/resultTemplate.html" with question_text=question.q1_question selected=question.q1_selected correct=question.q1_correct %}
+    {% include "quiz/resultTemplate.html" with question_text=question.q2_question selected=question.q2_selected correct=question.q2_correct %}
+    {% include "quiz/resultTemplate.html" with question_text=question.q3_question selected=question.q3_selected correct=question.q3_correct %}
+    {% include "quiz/resultTemplate.html" with question_text=question.q4_question selected=question.q4_selected correct=question.q4_correct %}
+    {% include "quiz/resultTemplate.html" with question_text=question.q5_question selected=question.q5_selected correct=question.q5_correct %}
+
+<a href="{% url 'quiz:detail' question.id %}">Retry?</a>
