@@ -22,5 +22,5 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('polls/', include('polls.urls')),
     path('quiz/', include('quiz.urls')),
-    path('mysite/', admin.site.urls),
+    path('admin/', admin.site.urls),
 ]
