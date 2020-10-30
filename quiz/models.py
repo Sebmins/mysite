@@ -32,6 +32,9 @@ class QuizQuestions(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name = 'Quiz Question'
+
 
 class Answer(models.Model):
     question = models.ForeignKey(QuizQuestions, on_delete=models.CASCADE)
