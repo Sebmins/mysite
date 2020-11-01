@@ -1,37 +1,95 @@
-from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse, HttpResponseRedirect
-from django.template import loader
+from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
-from django.views import generic
-from .models import QuizQuestions, Answer
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+
+from .forms import QuizForm
+from .models import QuizQuestions
 
 
-def index(request):
-    latest_question_list = QuizQuestions.objects.order_by('-name')[:5]
-    template = loader.get_template('quiz/index.html')
-    context = {
-        'latest_question_list': latest_question_list,
-    }
-    return render(request, 'quiz/index.html', context)
+class IndexView(ListView):
+    template_name = "quiz/index.html"
+    queryset = QuizQuestions.objects.all()
+    # queryset = QuizQuestions.objects.order_by('-id').all()
 
 
-def detail(request, question_id):
-    question = get_object_or_404(QuizQuestions, pk=question_id)
-    return render(request, 'quiz/detail.html', {'question': question})
+class DetailView(DetailView):
+    template_name = 'quiz/detail.html'
+
+    def get_object(self):
+        question_id = self.kwargs.get("question_id")
+        return get_object_or_404(QuizQuestions, id=question_id)
 
 
-def results(request, question_id):
-    question = get_object_or_404(QuizQuestions, pk=question_id)
-    return render(request, 'quiz/results.html', {'question': question})
+class VoteView(DetailView):
+    template_name = "quiz/results.html"
+
+    def get_object(self):
+        question_id = self.kwargs.get("question_id")
+        return get_object_or_404(QuizQuestions, id=question_id)
 
 
-class ResultsView(generic.DetailView):
-    model = Answer
+class ResultsView(ListView):
+    # model = Answer
     template_name = 'quiz/results.html'
 
 
+class AddView(CreateView):
+    template_name = 'quiz/create.html'
+    form_class = QuizForm
+    queryset = QuizQuestions.objects.all()
+    success_url = '../'
+
+    def form_valid(self, form):
+        print(form.cleaned_data)
+        return super().form_valid(form)
+
+# class EditView(UpdateView):
+#     template_name = 'quiz/create.html'
+#     form_class = QuizForm
+#     queryset = QuizQuestions.objects.all()
+#
+#     def get_object(self):
+#         question_id = self.kwargs.get("name")
+#         return get_object_or_404(QuizQuestions, id=question_id)
+#
+#     def form_valid(self, form):
+#         print(form.cleaned_data)
+#         return super().form_valid(form)
+
+def deleteView(request, question_id):
+    obj = get_object_or_404(QuizQuestions, id=question_id)
+
+    if request.method == "POST":
+        obj.delete()
+        return redirect('../../')
+
+    context = {
+        "object": obj
+    }
+    return render(request, "quiz/delete.html", context)
+
+
+class DeleteView(DeleteView):
+    template_name = 'quiz/delete.html'
+
+    def get_success_url(self):
+        return reverse('quiz/index.html')
+
+# UPDATE VIEW
+def editView(request, question_id):
+    obj = get_object_or_404(QuizQuestions, id=question_id)
+    form = QuizForm(request.POST or None, instance=obj)
+    if form.is_valid():
+        form.save()
+        return redirect("../")
+    context = {
+        'form': form
+    }
+    return render(request, "quiz/create.html", context)
+
+# FORM VIEW?
 def vote(request, question_id):
-    question = get_object_or_404(QuizQuestions, pk=question_id)
+    quiz = get_object_or_404(QuizQuestions, pk=question_id)
     try:
         selected_choice = request.POST['group1']
         selected_choice2 = request.POST['group2']
@@ -41,12 +99,17 @@ def vote(request, question_id):
     except(KeyError, QuizQuestions.DoesNotExist):
         return render(request, 'quiz/votingError.html')
     else:
-        question.q1_selected = selected_choice
-        question.q2_selected = selected_choice2
-        question.q3_selected = selected_choice3
-        question.q4_selected = selected_choice4
-        question.q5_selected = selected_choice5
+        quiz.q1_selected = selected_choice
+        quiz.q2_selected = selected_choice2
+        quiz.q3_selected = selected_choice3
+        quiz.q4_selected = selected_choice4
+        quiz.q5_selected = selected_choice5
         print("selected = ", selected_choice)
         print("selected = ", selected_choice2)
-        question.save()
-        return HttpResponseRedirect(reverse('quiz:results', args=(question_id,)))
+        quiz.save()
+
+        context = {
+            "quiz": quiz
+        }
+
+        return render(request, 'quiz/results.html', context)
