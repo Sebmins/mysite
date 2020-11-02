@@ -1,13 +1,7 @@
-{% extends 'quiz/base.html' %}
+<p>{{ question_text }} </p>
 
-{% block content %}
-
-    <p>{{ question_text }} --
-
-    {% if selected == correct %}
-        You got this correct!</p>
-    {% else %}
-        You got this wrong!</p>
-    {% endif %}
-
-{% endblock %}
+{% if selected == correct %}
+    <p class="text-success">You got this correct!</p>
+{% else %}
+    <p class="text-danger">You got this wrong!</p>
+{% endif %}

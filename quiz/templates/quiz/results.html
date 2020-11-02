@@ -1,19 +1,15 @@
 {% extends 'quiz/base.html' %}
 
-{% block title %}
-
-    <h2> Results from quiz</h2>
-
-{%  endblock %}
+<h2> Results from quiz</h2>
 
 {% block content %}
 
-    {% include "quiz/resultTemplate.html" with question_text=quiz.q1_question selected=quiz.q1_selected correct=question.q1_correct %}
-    {% include "quiz/resultTemplate.html" with question_text=quiz.q2_question selected=quiz.q2_selected correct=question.q2_correct %}
-    {% include "quiz/resultTemplate.html" with question_text=quiz.q3_question selected=quiz.q3_selected correct=question.q3_correct %}
-    {% include "quiz/resultTemplate.html" with question_text=quiz.q4_question selected=quiz.q4_selected correct=question.q4_correct %}
-    {% include "quiz/resultTemplate.html" with question_text=quiz.q5_question selected=quiz.q5_selected correct=question.q5_correct %}
+    {% include "quiz/resultTemplate.html" with question_text=quiz.q1_question selected=quiz.q1_selected correct=quiz.q1_correct %}
+    {% include "quiz/resultTemplate.html" with question_text=quiz.q2_question selected=quiz.q2_selected correct=quiz.q2_correct %}
+    {% include "quiz/resultTemplate.html" with question_text=quiz.q3_question selected=quiz.q3_selected correct=quiz.q3_correct %}
+    {% include "quiz/resultTemplate.html" with question_text=quiz.q4_question selected=quiz.q4_selected correct=quiz.q4_correct %}
+    {% include "quiz/resultTemplate.html" with question_text=quiz.q5_question selected=quiz.q5_selected correct=quiz.q5_correct %}
 
-    <a href="{% url 'quiz:detail' quiz.id %}">Retry?</a>
+    <a href="{% url 'quiz:questionnaire' quiz.id %}">Retry?</a>
 
 {% endblock %}

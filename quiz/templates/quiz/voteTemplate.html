@@ -1,18 +1,22 @@
-{% extends 'quiz/base.html' %}
+{% csrf_token %}
 
-{% block content %}
-
-    {% csrf_token %}
-
-    <h3>{{ question_text }}</h3>
-    <p> {{ answer_text }} </p>
-    <input type="radio" name={{ radioName }} value="A">
-    <label> A </label><br>
-    <input type="radio" name={{ radioName }} value="B">
-    <label> B </label><br>
-    <input type="radio" name={{ radioName }} value="C">
-    <label> C </label><br>
-    <input type="radio" name={{ radioName }} value="D">
-    <label> D </label><br>
-
-{% endblock %}
+<h4>{{ question_text }}</h4>
+<p> {{ answer_text }} </p>
+<div class="input-group mb-3">
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="{{ radioName }}"  value="A">
+        <label class="form-check-label" for="inlineRadio1">A</label>
+    </div>
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="{{ radioName }}" value="B">
+        <label class="form-check-label" for="inlineRadio2">B</label>
+    </div>
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="{{ radioName }}" value="C">
+        <label class="form-check-label" for="inlineRadio2">C</label>
+    </div>
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="{{ radioName }}" value="D">
+        <label class="form-check-label" for="inlineRadio2">D</label>
+    </div>
+</div>

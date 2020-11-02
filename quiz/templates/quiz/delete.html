@@ -4,8 +4,9 @@
 
     <form action="." method="POST">
         {% csrf_token %}
-        <h1>Do you want to delete the product "{{ object.name }}"?</h1>
-        <input type="submit" value="Yes" /><a href="../">Cancel</a>
+        <h3>Are you sure you want to delete the product "{{ object.name }}"?</h3>
+        <input type="submit" value="Yes" class="btn btn-outline-danger btn-sm" />
+        <a href="../" class="btn btn-outline-primary btn-sm">Cancel</a>
     </form>
 
 {% endblock %}

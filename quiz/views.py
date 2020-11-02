@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, DetailView, CreateView, DeleteView, FormView
 
 from .forms import QuizForm
 from .models import QuizQuestions
@@ -12,8 +12,9 @@ class IndexView(ListView):
     # queryset = QuizQuestions.objects.order_by('-id').all()
 
 
-class DetailView(DetailView):
-    template_name = 'quiz/detail.html'
+class DetailView(FormView):
+    template_name = 'quiz/questionnaire.html'
+    form_class = QuizForm
 
     def get_object(self):
         question_id = self.kwargs.get("question_id")

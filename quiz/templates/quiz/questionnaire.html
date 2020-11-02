@@ -1,24 +1,20 @@
 {% extends 'quiz/base.html' %}
 
-    {% block title %}
-        <h2> {{ object.name }} </h2>
-    {% endblock %}
-
 {% block content %}
+    <h2> {{ object.name }} </h2>
 
-
-    <a href="{% url 'quiz:edit' object.id %}"> edit </a>
-    <a href="{% url 'quiz:delete' object.id %}"> delete </a>
-
+    <a href="{% url 'quiz:edit' object.id %}" class="btn btn-outline-secondary btn-sm" role="button" aria-pressed="true">Edit </a>
+    <a href="{% url 'quiz:delete' object.id %}" class="btn btn-outline-danger btn-sm">Delete </a>
+    <br>
     <form action="{% url 'quiz:vote' object.id %}" method="post">
-
+        <br>
         {% include "quiz/voteTemplate.html" with question_text=object.q1_question answer_text=object.q1_answer radioName="group1" %}
         {% include "quiz/voteTemplate.html" with question_text=object.q2_question answer_text=object.q2_answer radioName="group2" %}
         {% include "quiz/voteTemplate.html" with question_text=object.q3_question answer_text=object.q3_answer radioName="group3" %}
         {% include "quiz/voteTemplate.html" with question_text=object.q4_question answer_text=object.q4_answer radioName="group4" %}
         {% include "quiz/voteTemplate.html" with question_text=object.q5_question answer_text=object.q5_answer radioName="group5" %}
 
-        <br><input type="submit" value="Done">
+        <br><button class="btn btn-primary btn-lg btn-block" type="submit">Done</button>
     </form>
 
 {% endblock %}
