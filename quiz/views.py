@@ -12,7 +12,7 @@ class IndexView(ListView):
     # queryset = QuizQuestions.objects.order_by('-id').all()
 
 
-class DetailView(FormView):
+class QuizView(DetailView):
     template_name = 'quiz/questionnaire.html'
     form_class = QuizForm
 
@@ -70,11 +70,11 @@ def deleteView(request, question_id):
     return render(request, "quiz/delete.html", context)
 
 
-class DeleteView(DeleteView):
-    template_name = 'quiz/delete.html'
-
-    def get_success_url(self):
-        return reverse('quiz/index.html')
+# class DeleteView(DeleteView):
+#     template_name = 'quiz/delete.html'
+#
+#     def get_success_url(self):
+#         return reverse('quiz/index.html')
 
 # UPDATE VIEW
 def editView(request, question_id):
@@ -114,3 +114,4 @@ def vote(request, question_id):
         }
 
         return render(request, 'quiz/results.html', context)
+
