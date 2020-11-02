@@ -48,7 +48,7 @@ class QuizQuestions(models.Model):
 
     def get_absolute_url(self):
         question = get_object_or_404(QuizQuestions, pk=id)
-        return render(request, 'quiz/detail.html', {'question': question})
+        return render(request, 'quiz/questionnaire.html', {'question': question})
 
 
 class Answer(models.Model):
