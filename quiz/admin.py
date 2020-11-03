@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import QuizQuestions, Answer
+from .models import QuizQuestions
 
 
 class ChoiceInline(admin.TabularInline):

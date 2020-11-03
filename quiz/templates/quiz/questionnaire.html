@@ -4,7 +4,7 @@
     <h2> {{ object.name }} </h2>
 
     <a href="{% url 'quiz:edit' object.id %}" class="btn btn-outline-secondary btn-sm" role="button" aria-pressed="true">Edit </a>
-    <a href="{% url 'quiz:delete' object.id %}" class="btn btn-outline-danger btn-sm">Delete </a>
+    <a href="{% url 'quiz:delete' object.pk %}" class="btn btn-outline-danger btn-sm">Delete </a>
     <br>
     <form action="{% url 'quiz:vote' object.id %}" method="post">
         <br>
@@ -16,5 +16,4 @@
 
         <br><button class="btn btn-primary btn-lg btn-block" type="submit">Done</button>
     </form>
-
 {% endblock %}

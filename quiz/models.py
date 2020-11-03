@@ -47,11 +47,4 @@ class QuizQuestions(models.Model):
         verbose_name = 'Quiz Question'
 
     def get_absolute_url(self):
-        question = get_object_or_404(QuizQuestions, pk=id)
-        return render(request, 'quiz/questionnaire.html', {'question': question})
-
-
-class Answer(models.Model):
-    question = models.ForeignKey(QuizQuestions, on_delete=models.CASCADE)
-
-
+        return reverse('quiz:questionnaire', kwargs={'question_id': self.id})

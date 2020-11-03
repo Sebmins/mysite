@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
-from django.views.generic import ListView, DetailView, CreateView, DeleteView, FormView
+from django.views.generic import ListView, DetailView, CreateView, DeleteView, FormView, UpdateView
 
 from .forms import QuizForm
 from .models import QuizQuestions
@@ -14,15 +14,15 @@ class IndexView(ListView):
 
 class QuizView(DetailView):
     template_name = 'quiz/questionnaire.html'
-    form_class = QuizForm
 
     def get_object(self):
         question_id = self.kwargs.get("question_id")
         return get_object_or_404(QuizQuestions, id=question_id)
 
 
-class VoteView(DetailView):
+class VoteView(FormView):
     template_name = "quiz/results.html"
+    form_class = QuizForm
 
     def get_object(self):
         question_id = self.kwargs.get("question_id")
@@ -44,49 +44,22 @@ class AddView(CreateView):
         print(form.cleaned_data)
         return super().form_valid(form)
 
-# class EditView(UpdateView):
-#     template_name = 'quiz/create.html'
-#     form_class = QuizForm
-#     queryset = QuizQuestions.objects.all()
-#
-#     def get_object(self):
-#         question_id = self.kwargs.get("name")
-#         return get_object_or_404(QuizQuestions, id=question_id)
-#
-#     def form_valid(self, form):
-#         print(form.cleaned_data)
-#         return super().form_valid(form)
 
-def deleteView(request, question_id):
-    obj = get_object_or_404(QuizQuestions, id=question_id)
-
-    if request.method == "POST":
-        obj.delete()
-        return redirect('../../')
-
-    context = {
-        "object": obj
-    }
-    return render(request, "quiz/delete.html", context)
+class DeleteView(DeleteView):
+    model = QuizQuestions
+    template_name = 'quiz/delete.html'
+    success_url = '../../'
 
 
-# class DeleteView(DeleteView):
-#     template_name = 'quiz/delete.html'
-#
-#     def get_success_url(self):
-#         return reverse('quiz/index.html')
+class EditView(UpdateView):
+    model = QuizQuestions
+    template_name = 'quiz/create.html'
+    form_class = QuizForm
 
-# UPDATE VIEW
-def editView(request, question_id):
-    obj = get_object_or_404(QuizQuestions, id=question_id)
-    form = QuizForm(request.POST or None, instance=obj)
-    if form.is_valid():
-        form.save()
-        return redirect("../")
-    context = {
-        'form': form
-    }
-    return render(request, "quiz/create.html", context)
+    def get_object(self):
+        quiz_id = self.kwargs.get("question_id")
+        return get_object_or_404(QuizQuestions, id=quiz_id)
+
 
 # FORM VIEW?
 def vote(request, question_id):
@@ -105,8 +78,6 @@ def vote(request, question_id):
         quiz.q3_selected = selected_choice3
         quiz.q4_selected = selected_choice4
         quiz.q5_selected = selected_choice5
-        print("selected = ", selected_choice)
-        print("selected = ", selected_choice2)
         quiz.save()
 
         context = {
