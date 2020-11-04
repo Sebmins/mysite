@@ -4,12 +4,12 @@
 
 {% block content %}
 
-    {% include "quiz/resultTemplate.html" with question_text=quiz.q1_question selected=quiz.q1_selected correct=quiz.q1_correct %}
-    {% include "quiz/resultTemplate.html" with question_text=quiz.q2_question selected=quiz.q2_selected correct=quiz.q2_correct %}
-    {% include "quiz/resultTemplate.html" with question_text=quiz.q3_question selected=quiz.q3_selected correct=quiz.q3_correct %}
-    {% include "quiz/resultTemplate.html" with question_text=quiz.q4_question selected=quiz.q4_selected correct=quiz.q4_correct %}
-    {% include "quiz/resultTemplate.html" with question_text=quiz.q5_question selected=quiz.q5_selected correct=quiz.q5_correct %}
+    {% include "quiz/resultTemplate.html" with question_text=object.q1_question selected=object.q1_selected correct=object.q1_correct %}
+    {% include "quiz/resultTemplate.html" with question_text=object.q2_question selected=object.q2_selected correct=object.q2_correct %}
+    {% include "quiz/resultTemplate.html" with question_text=object.q3_question selected=object.q3_selected correct=object.q3_correct %}
+    {% include "quiz/resultTemplate.html" with question_text=object.q4_question selected=object.q4_selected correct=object.q4_correct %}
+    {% include "quiz/resultTemplate.html" with question_text=object.q5_question selected=object.q5_selected correct=object.q5_correct %}
 
-    <a href="{% url 'quiz:questionnaire' quiz.id %}">Retry?</a>
+    <a href="{% url 'quiz:questionnaire' object.id %}">Retry?</a>
 
 {% endblock %}
