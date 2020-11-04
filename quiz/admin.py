@@ -1,16 +1,16 @@
 from django.contrib import admin
-from .models import QuizQuestions
+from .models import Quiz, QuizQuestion
 
 
 class ChoiceInline(admin.TabularInline):
-    # model = Answer
-    extra = 0
+    model = QuizQuestion
+    extra = 2
 
 
 class QuestionAdmin(admin.ModelAdmin):
     fieldsets = []
-    # inlines = [ChoiceInline]
+    inlines = [ChoiceInline]
     readonly_fields = ('id',)
 
 
-admin.site.register(QuizQuestions, QuestionAdmin)
+admin.site.register(Quiz, QuestionAdmin)

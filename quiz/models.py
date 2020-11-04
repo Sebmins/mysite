@@ -1,8 +1,7 @@
+
 from django.db import models
-from django.forms import ModelForm
-from django.http import request
-from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
+from django.utils import timezone
 
 TITLE_CHOICES = [
     ('A', 'A'),
@@ -12,39 +11,25 @@ TITLE_CHOICES = [
 ]
 
 
-class QuizQuestions(models.Model):
-    name = models.CharField(max_length=20)
-
-    q1_question = models.CharField(max_length=200)
-    q1_answer = models.CharField(blank=True, max_length=200)
-    q1_correct = models.CharField(blank=True, max_length=1, choices=TITLE_CHOICES)
-    q1_selected = models.CharField(blank=True, editable=False, max_length=1)
-
-    q2_question = models.CharField(max_length=200)
-    q2_answer = models.CharField(blank=True, max_length=200)
-    q2_correct = models.CharField(blank=True, max_length=1, choices=TITLE_CHOICES)
-    q2_selected = models.CharField(blank=True, editable=False, max_length=1)
-
-    q3_question = models.CharField(max_length=200)
-    q3_answer = models.CharField(blank=True, max_length=200)
-    q3_correct = models.CharField(blank=True, max_length=1, choices=TITLE_CHOICES)
-    q3_selected = models.CharField(blank=True, editable=False, max_length=1)
-
-    q4_question = models.CharField(max_length=200)
-    q4_answer = models.CharField(blank=True, max_length=200)
-    q4_correct = models.CharField(blank=True, max_length=1, choices=TITLE_CHOICES)
-    q4_selected = models.CharField(blank=True, editable=False, max_length=1)
-
-    q5_question = models.CharField(max_length=200)
-    q5_answer = models.CharField(blank=True, max_length=200)
-    q5_correct = models.CharField(blank=True, max_length=1, choices=TITLE_CHOICES)
-    q5_selected = models.CharField(blank=True, editable=False, max_length=1)
+class Quiz(models.Model):
+    title = models.CharField(default="qTitle", max_length=40)
+    author = models.CharField(default="Seb", max_length=40)
+    dt_date = models.DateTimeField(default=timezone.now())
 
     def __str__(self):
-        return self.name
+        return self.title
 
     class Meta:
-        verbose_name = 'Quiz Question'
+        verbose_name = 'Quizze'
 
-    def get_absolute_url(self):
-        return reverse('quiz:questionnaire', kwargs={'question_id': self.id})
+
+class QuizQuestion(models.Model):
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
+    question_text = models.CharField(default="text", max_length=100)
+    option1 = models.CharField(default="1", max_length=50)
+    option2 = models.CharField(default="2", max_length=50)
+    option3 = models.CharField(default="3", max_length=50)
+    option4 = models.CharField(default="4", max_length=50)
+
+    def __str__(self):
+        return self.question_text

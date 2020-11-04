@@ -1,8 +1,5 @@
 from django.urls import path
-from . import views
 from .views import IndexView, ResultsView, AddView, DeleteView, QuizView, EditView
-
-# from .views import product_create_view, render_initial_data, delete_data, IndexView
 
 app_name = 'quiz'
 urlpatterns = [
