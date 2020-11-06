@@ -4,7 +4,8 @@ from .models import Quiz, QuizQuestion
 
 class ChoiceInline(admin.TabularInline):
     model = QuizQuestion
-    extra = 2
+    extra = 0
+    readonly_fields = ('id',)
 
 
 class QuestionAdmin(admin.ModelAdmin):

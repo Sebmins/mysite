@@ -1,7 +1,7 @@
 {% extends 'quiz/base.html' %}
 
 {% block content %}
-    <h2> {{ object.name }} </h2>
+    <h2> {{ object.title }} </h2>
     <a href="{% url 'quiz:edit' object.id %}" class="btn btn-outline-secondary btn-sm" role="button" aria-pressed="true">Edit </a>
     <a href="{% url 'quiz:delete' object.pk %}" class="btn btn-outline-danger btn-sm">Delete </a>
 

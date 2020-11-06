@@ -5,8 +5,8 @@
         <table class="table">
             {{ quizquestion.management_form }}
 
-            {% for form in quizquestion %}
-                {{ form.as_p }}
+            {% for form in quizquestion.forms %}
+                {{ form.as_table }}
             {% endfor %}
         </table>
         <input type="submit" value="Save"/> <a href="{% url 'quiz:index' %}">back to the list</a>
