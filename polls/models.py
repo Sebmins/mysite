@@ -1,14 +1,13 @@
 import datetime
+from pyexpat import model
 
-from django.db import models
+from django.db.models import Model, DateTimeField, CharField, ForeignKey, CASCADE, IntegerField
 from django.utils import timezone
 
-# Create your models here.
 
-
-class Question(models.Model):
-    question_text = models.CharField(max_length=200)
-    pub_date = models.DateTimeField('date published')
+class PollQuestion(Model):
+    question_text = CharField(max_length=200)
+    pub_date = DateTimeField('date published')
 
     def __str__(self):
         return self.question_text
@@ -24,10 +23,10 @@ class Question(models.Model):
         verbose_name = 'Poll Question'
 
 
-class Choice(models.Model):
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    choice_text = models.CharField(max_length=200)
-    votes = models.IntegerField(default=0)
+class Choice(Model):
+    question = ForeignKey(PollQuestion, on_delete=CASCADE)
+    choice_text = CharField(max_length=200)
+    votes = IntegerField(default=0)
 
     def __str__(self):
         return self.choice_text

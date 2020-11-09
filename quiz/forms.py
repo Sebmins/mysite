@@ -23,13 +23,6 @@ class QuestionForm(ModelForm):
 EditFormSet = inlineformset_factory(Quiz, QuizQuestion, form=QuestionForm, extra=0)
 CreateFormSet = inlineformset_factory(Quiz, QuizQuestion, form=QuestionForm, extra=5)
 
-AtoB = [
-    ('A', 'A'),
-    ('B', 'B'),
-    ('C', 'C'),
-    ('D', 'D'),
-]
-
 
 class VotingForm(forms.Form):
     title = forms.CharField()
@@ -49,19 +42,18 @@ class VotingForm(forms.Form):
 
 
 class VotingForm2(forms.Form):
-    question_text = forms.CharField()
-    option1 = forms.CharField()
-    option2 = forms.CharField()
-    option3 = forms.CharField()
-    option4 = forms.CharField()
+    question_text = forms.ChoiceField(widget=forms.RadioSelect)
 
     def __init__(self, *args, **kwargs):
         quiz = kwargs.pop("quiz")
-        super(VotingForm, self).__init__(*args, **kwargs)
+        super(VotingForm2, self).__init__(*args, **kwargs)
+
+        One_to_four = [
+            (1, quiz.option1),
+            (2, quiz.option2),
+            (3, quiz.option3),
+            (4, quiz.option4),
+        ]
 
         self.fields[str('question_text')].label = quiz.question_text
-        self.fields[str('option1')].label = "A: " + quiz.option1
-        self.fields[str('option2')].label = "B: " + quiz.option2
-        self.fields[str('option3')].label = "C: " + quiz.option3
-        self.fields[str('option4')].label = "D: " + quiz.option4
-
+        self.fields[str('question_text')].choices = One_to_four

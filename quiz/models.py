@@ -3,11 +3,11 @@ from django.db import models
 from django.urls import reverse
 from django.utils import timezone
 
-TITLE_CHOICES = [
-    ('A', 'A'),
-    ('B', 'B'),
-    ('C', 'C'),
-    ('D', 'D'),
+One_to_Four = [
+    (1, 1),
+    (2, 2),
+    (3, 3),
+    (4, 4),
 ]
 
 
@@ -29,6 +29,7 @@ class Quiz(models.Model):
 class QuizQuestion(models.Model):
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
     question_text = models.CharField(max_length=100)
+    correct = models.IntegerField(blank=True, null=True, choices=One_to_Four)
     option1 = models.CharField(max_length=50)
     option2 = models.CharField(max_length=50)
     option3 = models.CharField(max_length=50)

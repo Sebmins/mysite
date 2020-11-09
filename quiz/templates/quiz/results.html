@@ -1,15 +1,15 @@
 {% extends 'quiz/base.html' %}
 
-<h2> Results from quiz</h2>
-
 {% block content %}
 
-    {% include "quiz/resultTemplate.html" with question_text=object.q1_question selected=object.q1_selected correct=object.q1_correct %}
-    {% include "quiz/resultTemplate.html" with question_text=object.q2_question selected=object.q2_selected correct=object.q2_correct %}
-    {% include "quiz/resultTemplate.html" with question_text=object.q3_question selected=object.q3_selected correct=object.q3_correct %}
-    {% include "quiz/resultTemplate.html" with question_text=object.q4_question selected=object.q4_selected correct=object.q4_correct %}
-    {% include "quiz/resultTemplate.html" with question_text=object.q5_question selected=object.q5_selected correct=object.q5_correct %}
+<h4> Results from {{ quiz.title }}s Quiz </h4>
+<h6> By: {{ quiz.author }} </h6>
+<br>
+    {% for i in '01234'%}
+        {{ forloop.counter }}
+        {% include "quiz/resultTemplate.html" %}
+    {% endfor %}
 
-    <a href="{% url 'quiz:questionnaire' object.id %}">Retry?</a>
+    <a href="{% url 'quiz:questionnaire' quiz.id %}">Retry?</a>
 
 {% endblock %}

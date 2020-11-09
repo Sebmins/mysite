@@ -1,8 +1,8 @@
-<p>{{ question_text }} </p>
+<p>{{ question.question_text }} </p>
+{% if selected == question.correct %}
 
-{% if selected == correct %}
-    <p class="text-success">You got this correct!</p>
+    <p class="text-success">Your choice of "{{ selected }}" was correct!</p>
 {% else %}
-    <p class="text-danger">You got this wrong!</p>
+    <p class="text-danger">Your choice of "{{ selected }}" was wrong!</p>
 {% endif %}
 <br>
