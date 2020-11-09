@@ -5,7 +5,7 @@ from django.template.response import TemplateResponse
 from django.urls import reverse
 from django.views.generic import ListView, DetailView, CreateView, DeleteView, FormView, UpdateView
 
-from .forms import VotingForm, CreateFormSet, EditFormSet, EditForm, QuestionForm, VotingForm2
+from .forms import VotingForm, CreateFormSet, EditFormSet
 from .models import Quiz, QuizQuestion
 
 
@@ -17,7 +17,7 @@ class IndexView(ListView):
 
 class QuizView(FormView, DetailView):
     template_name = 'quiz/questionnaire.html'
-    form_class = VotingForm2
+    form_class = VotingForm
     queryset = QuizQuestion.objects.all()
     success_url = '../'
 
@@ -28,7 +28,7 @@ class QuizView(FormView, DetailView):
     def get_form_kwargs(self):
         kwargs = super(QuizView, self).get_form_kwargs()
         quiz_id = QuizQuestion.objects.get(pk=self.kwargs["quiz_id"])
-        question_id = QuizQuestion.objects.get(pk=self.kwargs["quiz_id"])
+        question_id = QuizQuestion.objects.all()
         kwargs['quiz'] = quiz_id
         return kwargs
 
@@ -121,37 +121,3 @@ class EditView(UpdateView):
                 quizquestion.instance = self.object
                 quizquestion.save()
         return super(EditView, self).form_valid(form)
-
-
-# class MultiView(View):
-#
-#     def get(self, request, quiz_id=None):
-#         if quiz_id:
-#             quiz = get_object_or_404(Quiz, id=quiz_id)
-#             quiz_form = EditForm(instance=quiz)
-#             question = quiz.quizquestion_set.all()
-#             question_form = [QuestionForm(prefix=str(quiz.id), instance=q) for q in question]
-#             template = 'quiz/edit.html'
-#         else:
-#             quiz_form = EditForm()
-#             question_form = [QuestionForm(prefix=str(x),) for x in range(3)]
-#             template = 'quiz/create.html'
-#
-#         context = {'quiz_form': quiz_form, 'question_form': question_form}
-#         return render(request, template, context)
-#
-#     def post(self, request):
-#         context = {}
-#         quiz_form = EditForm(request.POST,) # instance=Quiz
-#         question_form = [QuestionForm(request.POST, prefix=str(x),) for x in range(0, 3)] # instance=QuizQuestion
-#         if quiz_form.is_valid() and all([q.is_valid() for q in question_form]):
-#             new_quiz = quiz_form.save()
-#             # new_quiz.id =
-#             new_quiz.save()
-#             for q in question_form:
-#                 new_question = q.save()
-#                 new_question.quiz = new_quiz
-#                 new_question.save()
-#             return HttpResponseRedirect('quiz/index.html')
-#         context = {'quiz_form': quiz_form, 'question_form': question_form}
-#         return render(request, 'quiz/create.html', context)

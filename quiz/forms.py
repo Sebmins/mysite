@@ -24,7 +24,7 @@ EditFormSet = inlineformset_factory(Quiz, QuizQuestion, form=QuestionForm, extra
 CreateFormSet = inlineformset_factory(Quiz, QuizQuestion, form=QuestionForm, extra=5)
 
 
-class VotingForm(forms.Form):
+class VotingFormPrimary(forms.Form):
     title = forms.CharField()
     author = forms.CharField()
     dt_date = forms.DateField()
@@ -33,7 +33,7 @@ class VotingForm(forms.Form):
     def __init__(self, *args, **kwargs):
         quiz = kwargs.pop("quiz")
         # question = kwargs.pop("question")
-        super(VotingForm, self).__init__(*args, **kwargs)
+        super(VotingFormPrimary, self).__init__(*args, **kwargs)
 
         self.fields[str('title')].label = quiz.title
         self.fields[str('author')].label = "Written by: " + quiz.author
@@ -41,19 +41,17 @@ class VotingForm(forms.Form):
         # self.fields[str('question_text')].label = question.question_text
 
 
-class VotingForm2(forms.Form):
+class VotingForm(forms.Form):
     question_text = forms.ChoiceField(widget=forms.RadioSelect)
 
     def __init__(self, *args, **kwargs):
         quiz = kwargs.pop("quiz")
-        super(VotingForm2, self).__init__(*args, **kwargs)
-
+        super(VotingForm, self).__init__(*args, **kwargs)
         One_to_four = [
             (1, quiz.option1),
             (2, quiz.option2),
             (3, quiz.option3),
             (4, quiz.option4),
         ]
-
         self.fields[str('question_text')].label = quiz.question_text
         self.fields[str('question_text')].choices = One_to_four

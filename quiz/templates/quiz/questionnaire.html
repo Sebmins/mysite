@@ -1,27 +1,28 @@
 {% extends 'quiz/base.html' %}
 
 {% block content %}
-    <h2> {{ object.title }} Quiz </h2>
-    <h6> {{ object.dt_date }}</h6>
-    <h6> By: {{ object.author }}</h6>
-{#    <a href="{% url 'quiz:edit' object.id %}" class="btn btn-outline-secondary btn-sm" role="button" aria-pressed="true">Edit </a>#}
-{#    <a href="{% url 'quiz:delete' object.pk %}" class="btn btn-outline-danger btn-sm">Delete </a>#}
+    <div class="mx-auto" style="width: 600px;">
+        <h2> {{ object.title }} Quiz </h2>
+        <h6> {{ object.dt_date }}</h6>
+        <h6> By: {{ object.author }}</h6>
+        <a href="{% url 'quiz:edit' object.id %}" class="btn btn-outline-secondary btn-sm" role="button" aria-pressed="true">Edit </a>
+        <a href="{% url 'quiz:delete' object.pk %}" class="btn btn-outline-danger btn-sm">Delete </a>
 
-    <form action="." method="post">
-        <br>
-        {% csrf_token %}
-        {% for object in form %}
-            {{ object.as_p }}
-        {% endfor %}
-        {{ form.as_p }}
-
-        {{ quiz_form }}
-
-        {% for form in quizquestion %}
+        <form action="." method="post">
+            <br>
+            {% csrf_token %}
+            {% for object in form %}
+                {{ object.as_p }}
+            {% endfor %}
             {{ form.as_p }}
-        {% endfor %}
-        <button class="btn btn-primary btn-lg btn-block" type="submit">Done</button>
-    </form>
 
-    <br>
+            {{ quiz_form }}
+
+            {% for form in quizquestion %}
+                {{ form.as_p }}
+            {% endfor %}
+            <button class="btn btn-primary btn-lg btn-block" type="submit">Done</button>
+        </form>
+        <br>
+    </div>
 {% endblock %}

@@ -1,15 +1,15 @@
 {% extends 'quiz/base.html' %}
 
 {% block content %}
+    <div class="mx-auto" style="width: 600px;">
+        <h4> Results from {{ quiz.title }}s Quiz </h4>
+        <h6> By: {{ quiz.author }} </h6>
+        <br>
+        {% for i in '01234'%}
+            {{ forloop.counter }}
+            {% include "quiz/resultTemplate.html" %}
+        {% endfor %}
 
-<h4> Results from {{ quiz.title }}s Quiz </h4>
-<h6> By: {{ quiz.author }} </h6>
-<br>
-    {% for i in '01234'%}
-        {{ forloop.counter }}
-        {% include "quiz/resultTemplate.html" %}
-    {% endfor %}
-
-    <a href="{% url 'quiz:questionnaire' quiz.id %}">Retry?</a>
-
+        <a href="{% url 'quiz:questionnaire' quiz.id %}">Retry?</a>
+    </div>
 {% endblock %}
