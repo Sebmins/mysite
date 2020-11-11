@@ -12,6 +12,7 @@ class QuestionAdmin(admin.ModelAdmin):
     fieldsets = []
     inlines = [ChoiceInline]
     readonly_fields = ('id',)
+    list_filter = ('author', 'dt_date',)
 
 
 admin.site.register(Quiz, QuestionAdmin)

@@ -5,11 +5,19 @@
         <h4> Results from {{ quiz.title }}s Quiz </h4>
         <h6> By: {{ quiz.author }} </h6>
         <br>
-        {% for i in '01234'%}
-            {{ forloop.counter }}
-            {% include "quiz/resultTemplate.html" %}
+
+        {% for selected_answer, question in answer_object %}
+            <p>{{ question.question_text }} </p>
+            {% if selected_answer == question.correct %}
+                <p class="text-success">Your choice of "{{ selected_answer }}" was correct!</p>
+            {% else %}
+                <p class="text-danger">Your choice of "{{ selected_answer  }}" was wrong!</p>
+            {% endif %}
+
+            <br>
         {% endfor %}
 
         <a href="{% url 'quiz:questionnaire' quiz.id %}">Retry?</a>
+    <br>
     </div>
 {% endblock %}

@@ -1,10 +1,7 @@
 from django.db import transaction
-from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.template.response import TemplateResponse
-from django.urls import reverse
 from django.views.generic import ListView, DetailView, CreateView, DeleteView, FormView, UpdateView
-
 from .forms import VotingForm, CreateFormSet, EditFormSet
 from .models import Quiz, QuizQuestion
 
@@ -12,7 +9,6 @@ from .models import Quiz, QuizQuestion
 class IndexView(ListView):
     template_name = "quiz/index.html"
     queryset = Quiz.objects.all()
-    # queryset = QuizQuestions.objects.order_by('-id').all()
 
 
 class QuizView(FormView, DetailView):
@@ -21,32 +17,32 @@ class QuizView(FormView, DetailView):
     queryset = QuizQuestion.objects.all()
     success_url = '../'
 
+    def get_form_kwargs(self):
+        kwargs = super(QuizView, self).get_form_kwargs()
+        quiz_id = QuizQuestion.objects.filter(quiz=self.kwargs["quiz_id"])
+        kwargs['quiz'] = quiz_id
+        return kwargs
+
     def get_object(self):
         quiz_id = self.kwargs.get("quiz_id")
         return get_object_or_404(Quiz, id=quiz_id)
 
-    def get_form_kwargs(self):
-        kwargs = super(QuizView, self).get_form_kwargs()
-        quiz_id = QuizQuestion.objects.get(pk=self.kwargs["quiz_id"])
-        question_id = QuizQuestion.objects.all()
-        kwargs['quiz'] = quiz_id
-        return kwargs
-
     def post(self, request, *args, **wkwargs):
-        quiz_id = self.kwargs.get("quiz_id")
-        quiz_obj = get_object_or_404(Quiz, pk=quiz_id)
-        question_id = QuizQuestion.objects.get(pk=self.kwargs["quiz_id"])
-        print(quiz_id)
-        print(quiz_obj)
-        print(question_id)
+        quiz_obj = get_object_or_404(Quiz, pk=self.kwargs.get("quiz_id"))
+        count = QuizQuestion.objects.filter(quiz=self.kwargs["quiz_id"]).count()
+        question = QuizQuestion.objects.filter(quiz=self.kwargs["quiz_id"])
+
+        selected_answers = []
         try:
-            selected_option = int(request.POST['question_text'])
+            for i in range(count):
+                selected_answers.append(int(request.POST['question_text'+str(i)]))
+
             args = {
-                'selected': selected_option,
+                'answer_object': zip(selected_answers, question),
                 'quiz': quiz_obj,
-                'question': question_id
+                # 'question_list': question_list,
             }
-            print(args)
+
         except(KeyError, Quiz.DoesNotExist):
             return render(request, 'quiz/votingError.html')
         else:
@@ -96,7 +92,6 @@ class DeleteView(DeleteView):
     success_url = '../../'
 
 
-# Doesn't save the QuizQuestions data
 class EditView(UpdateView):
     model = Quiz
     fields = '__all__'
@@ -114,6 +109,7 @@ class EditView(UpdateView):
     def form_valid(self, form):
         context = self.get_context_data()
         quizquestion = context['quizquestion']
+
         with transaction.atomic():
             self.object = form.save()
 

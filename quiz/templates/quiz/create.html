@@ -1,36 +1,22 @@
 {% extends 'quiz/base.html' %}
 
+{%  load crispy_forms_tags %}
+
 {% block content %}
-    <div class="p-5 border bg-light" style="">
-        <form action="" method="post">{% csrf_token %}
-            {{ form.as_p }}
+    <form action="" method="post">{% csrf_token %}
+        {{ form|crispy}}
+        <br>
 
-            <table class="table">
-                {{ quizquestion.management_form }}
+        {{ quizquestion.management_form }}
 
-                {% for form in quizquestion.forms %}
-                <table class="table">
-                    {% if forloop.first %}
-                        <thead>
-                        <tr>
-                            {% for field in form.visible_fields %}
-                                <th>{{ field.label|capfirst }}</th>
-                            {% endfor %}
-                        </tr>
-                        </thead>
-                    {% endif %}
-                        {% for field in form.visible_fields %}
-                            <td>
-                                {{ field }}
-                            </td>
-                        {% endfor %}
-                </table>
-            </table>
-            {% endfor %}
-            <input class="btn btn-primary btn-md" type="submit" value="Create"/>
-            <a class="btn btn-link" href="{% url 'quiz:index' %}">Back to the list</a>
-        </form>
-    </div>
+        {% for form in quizquestion %}
+            {{ form|crispy}}
+            <br/>
+        {%  endfor %}
+        <input class="btn btn-primary btn-md" type="submit" value="Create"/>
+        <a class="btn btn-link" href="{% url 'quiz:index' %}">Back to the list</a>
+    </form>
+    <br>
 {% endblock %}
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <script type="text/javascript">
