@@ -1,8 +1,5 @@
-from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit
 from django import forms
 from django.forms import ModelForm, inlineformset_factory
-from django.utils import timezone
 from quiz.models import Quiz, QuizQuestion
 
 
@@ -18,8 +15,8 @@ class QuestionForm(ModelForm):
         # self.helper.add_input(Submit('submit', 'Save Question'))
 
 
-EditFormSet = inlineformset_factory(Quiz, QuizQuestion, form=QuestionForm, extra=0)
-CreateFormSet = inlineformset_factory(Quiz, QuizQuestion, form=QuestionForm, extra=5)
+EditFormSet = inlineformset_factory(Quiz, QuizQuestion, form=QuestionForm, extra=1)
+CreateFormSet = inlineformset_factory(Quiz, QuizQuestion, form=QuestionForm, extra=1)
 
 
 class VotingForm(forms.Form):
