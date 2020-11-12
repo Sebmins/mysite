@@ -15,13 +15,21 @@ class QuizView(FormView, DetailView):
     template_name = 'quiz/questionnaire.html'
     form_class = VotingForm
     queryset = QuizQuestion.objects.all()
-    success_url = '../'
 
     def get_form_kwargs(self):
         kwargs = super(QuizView, self).get_form_kwargs()
         quiz_id = QuizQuestion.objects.filter(quiz=self.kwargs["quiz_id"])
         kwargs['quiz'] = quiz_id
         return kwargs
+
+    def get_object(self):
+        quiz_id = self.kwargs.get("quiz_id")
+        return get_object_or_404(Quiz, id=quiz_id)
+
+
+class ResultsView(DetailView):
+    template_name = 'quiz/results.html'
+    queryset = Quiz.objects.all()
 
     def get_object(self):
         quiz_id = self.kwargs.get("quiz_id")
@@ -40,7 +48,6 @@ class QuizView(FormView, DetailView):
             args = {
                 'answer_object': zip(selected_answers, question),
                 'quiz': quiz_obj,
-                # 'question_list': question_list,
             }
 
         except(KeyError, Quiz.DoesNotExist):
@@ -48,15 +55,6 @@ class QuizView(FormView, DetailView):
         else:
             quiz_obj.save()
             return TemplateResponse(request, 'quiz/results.html', args)
-
-
-class ResultsView(DetailView):
-    template_name = 'quiz/results.html'
-    queryset = Quiz.objects.all()
-
-    def get_object(self):
-        quiz_id = self.kwargs.get("quiz_id")
-        return get_object_or_404(Quiz, id=quiz_id)
 
 
 # Does take you to the newly created page once completed

@@ -8,7 +8,7 @@
         <a href="{% url 'quiz:edit' object.id %}" class="btn btn-outline-secondary btn-sm" role="button" aria-pressed="true">Edit </a>
         <a href="{% url 'quiz:delete' object.pk %}" class="btn btn-outline-danger btn-sm">Delete </a>
 
-        <form action="." method="post">
+        <form action="{% url 'quiz:results' object.pk %}" method="post">
             <br>
             {% csrf_token %}
             {% for object in form %}

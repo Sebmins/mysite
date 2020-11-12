@@ -1,7 +1,5 @@
 from django.test import TestCase
-
 from django.urls import reverse
-
 from quiz.forms import QuestionForm
 from quiz.models import Quiz, QuizQuestion
 
@@ -25,8 +23,7 @@ class URLTests(TestCase):
         self.assertContains(response, '1-title')
         self.assertContains(response, '2-title')
         self.assertNotContains(response, '2-author')
-
-
+        # self.assertContains(response, 'add')
 
 
 # Test creating objects

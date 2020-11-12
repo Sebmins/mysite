@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import IndexView, ResultsView, AddView, DeleteView, QuizView, EditView
+from .views import IndexView, AddView, ResultsView, DeleteView, QuizView, EditView
 
 app_name = 'quiz'
 urlpatterns = [
