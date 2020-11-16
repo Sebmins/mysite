@@ -1,5 +1,7 @@
 {% extends 'quiz/base.html' %}
 
+{% load crispy_forms_tags %}
+
 {% block content %}
     <div class="mx-auto" style="width: 600px;">
         <h2> {{ object.title }} Quiz </h2>
@@ -8,21 +10,119 @@
         <a href="{% url 'quiz:edit' object.id %}" class="btn btn-outline-secondary btn-sm" role="button" aria-pressed="true">Edit </a>
         <a href="{% url 'quiz:delete' object.pk %}" class="btn btn-outline-danger btn-sm">Delete </a>
 
-        <form action="{% url 'quiz:results' object.pk %}" method="post">
+        {{ question|json_script:"quiz-question" }}
+
+        <br>
+        <form id="form" action="" method="post">
+        {#<form action="{% url 'quiz:results' object.pk %}" method="post">#}
             <br>
             {% csrf_token %}
-            {% for object in form %}
-                {{ object.as_p }}
-            {% endfor %}
-            {{ form.as_p }}
 
-            {{ quiz_form }}
+            {% if question|length >= 1 %}
+                <div id="form_question" style="display:block">
+                    {{ form.question_text0|as_crispy_field }}
+                </div>
+            {% endif %}
 
-            {% for form in quizquestion %}
-                {{ form.as_p }}
-            {% endfor %}
-            <button class="btn btn-primary btn-lg btn-block" type="submit">Done</button>
+            {% if question|length >= 2 %}
+                <div id="form_question" style="display:none">
+                    {{ form.question_text1|as_crispy_field }}
+                </div>
+            {% endif %}
+
+            {% if question|length >= 3 %}
+                <div id="form_question" style="display:none">
+                    {{ form.question_text2|as_crispy_field }}
+                </div>
+            {% endif %}
+
+            {% if question|length >= 4 %}
+                <div id="form_question" style="display:none">
+                    {{ form.question_text3|as_crispy_field }}
+                </div>
+            {% endif %}
+
+            {% if question|length >= 5 %}
+                <div id="form_question" style="display:none">
+                    {{ form.question_text4|as_crispy_field }}
+                </div>
+            {% endif %}
+
+            <button id="submitBtn" class="btn btn-primary btn-lg btn-block" type="submit">Submit</button>
         </form>
         <br>
     </div>
+
+<script>
+    $(document).ready(function() {
+        $("#form").submit(function(e) {
+            e.preventDefault();
+        });
+
+        //Gets question object
+        const question = JSON.parse(document.getElementById('quiz-question').textContent);
+
+        var listItems = $( "div[id='form_question']" );
+
+
+        var loop = 0;
+        var score = 0;
+        $("#submitBtn").prop('disabled', true);
+
+        // When option is selected able to submit
+        $("[type='radio']").on('change',function(){
+            $("#submitBtn").prop('disabled', false);});
+
+        var hasGuessed = true;
+        $("#submitBtn").click(function(){
+            if(loop>=listItems.length){
+                console.log("fini");
+                $(".score").remove();
+                $("#submitBtn").removeClass('btn-success').removeClass('btn-danger').addClass('btn-primary').text('Submit');
+                $('.form-check-label').each(function(){
+                    $(this).css('color','black');
+                });
+                loop = 0;
+                score = 0;
+                $(listItems[loop]).slideToggle("slow");
+            } else {
+                if (hasGuessed) {
+
+                    var selected_value = $("[type='radio']:checked").val();
+                    var label_text = $('label[for="' + "id_question_text" + loop + "_" + selected_value + '"]');
+
+                    var selected_answer = selected_value;
+                    var correct_answer = question[loop].correct;
+
+
+                    if (selected_answer == correct_answer) {
+                        label_text.css('color', 'green');
+                        $("#submitBtn").removeClass('btn-primary').addClass('btn-success').text('Correct');
+                        score++;
+                    } else {
+                        label_text.effect("shake", {times: 2}, 300).css('color', 'red');
+                        $('label[for="' + "id_question_text" + loop + "_" + correct_answer + '"]').css('color', 'green');
+                        $("#submitBtn").removeClass('btn-primary').addClass('btn-danger').text('Wrong');
+                    }
+                    hasGuessed = false;
+                } else {
+                    $('input[type="radio"]').prop('checked', false);
+                    $("#submitBtn").removeClass('btn-success').removeClass('btn-danger').addClass('btn-primary').text('Submit');
+                    $(listItems[loop]).slideToggle("slow");
+                    $(listItems[loop + 1]).slideToggle("slow");
+                    $("#submitBtn").prop('disabled', true);
+                    loop++;
+                    hasGuessed = true;
+
+                    if (loop >= listItems.length) {
+                        $("#submitBtn").after("<br> <p class='score'>You scored " + score + " out of " + listItems.length + " </p>").slideDown();
+                        $("#submitBtn").text('Retry...');
+                        console.log(listItems.length);
+                        $("#submitBtn").prop('disabled', false);
+                    }
+                }
+            }
+        });
+    });
+</script>
 {% endblock %}

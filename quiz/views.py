@@ -1,5 +1,9 @@
+from datetime import time
+
 from django.db import transaction
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
+from django.template import RequestContext
 from django.template.response import TemplateResponse
 from django.views.generic import ListView, DetailView, CreateView, DeleteView, FormView, UpdateView
 from .forms import VotingForm, CreateFormSet, EditFormSet
@@ -15,6 +19,12 @@ class QuizView(FormView, DetailView):
     template_name = 'quiz/questionnaire.html'
     form_class = VotingForm
     queryset = QuizQuestion.objects.all()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        question = QuizQuestion.objects.filter(quiz=self.kwargs["quiz_id"]).values()
+        context['question'] = list(question)
+        return context
 
     def get_form_kwargs(self):
         kwargs = super(QuizView, self).get_form_kwargs()
@@ -37,12 +47,11 @@ class ResultsView(DetailView):
 
     def post(self, request, *args, **wkwargs):
         quiz_obj = get_object_or_404(Quiz, pk=self.kwargs.get("quiz_id"))
-        count = QuizQuestion.objects.filter(quiz=self.kwargs["quiz_id"]).count()
         question = QuizQuestion.objects.filter(quiz=self.kwargs["quiz_id"])
 
         selected_answers = []
         try:
-            for i in range(count):
+            for i in range(question.count()):
                 selected_answers.append(int(request.POST['question_text'+str(i)]))
 
             args = {
