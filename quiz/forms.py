@@ -1,3 +1,5 @@
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Layout, Div, Field, Submit, ButtonHolder
 from django import forms
 from django.forms import ModelForm, inlineformset_factory
 from quiz.models import Quiz, QuizQuestion
@@ -7,12 +9,6 @@ class QuestionForm(ModelForm):
     class Meta:
         model = QuizQuestion
         exclude = ('quiz',)
-
-    # def __init__(self, *args, **kwargs):
-    #     super().__init__(*args, **kwargs)
-        # self.helper = FormHelper()
-        # self.helper.form_method = 'post'
-        # self.helper.add_input(Submit('submit', 'Save Question'))
 
 
 EditFormSet = inlineformset_factory(Quiz, QuizQuestion, form=QuestionForm, extra=1)
@@ -26,6 +22,12 @@ class VotingForm(forms.Form):
 
         i = 0
         for question in quiz:
+            self.helper = FormHelper()
+            self.helper.form_id = 'form_question'
+            self.helper.form_class = 'blueForms'
+            self.helper.add_input(Submit('submit','Submit',
+                                         css_id="submitBtn",
+                                         css_class='btn btn-primary btn-lg btn-block'))
             self.fields['question_text' + str(i)] = forms.ChoiceField(
                 widget=forms.RadioSelect, label=question, choices=[
                     (1, quiz[i].option1),

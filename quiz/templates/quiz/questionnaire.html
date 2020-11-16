@@ -11,113 +11,80 @@
         <a href="{% url 'quiz:delete' object.pk %}" class="btn btn-outline-danger btn-sm">Delete </a>
 
         {{ question|json_script:"quiz-question" }}
-
-        <br>
-        <form id="form" action="" method="post">
-        {#<form action="{% url 'quiz:results' object.pk %}" method="post">#}
-            <br>
-            {% csrf_token %}
-
-            {% if question|length >= 1 %}
-                <div id="form_question" style="display:block">
-                    {{ form.question_text0|as_crispy_field }}
-                </div>
-            {% endif %}
-
-            {% if question|length >= 2 %}
-                <div id="form_question" style="display:none">
-                    {{ form.question_text1|as_crispy_field }}
-                </div>
-            {% endif %}
-
-            {% if question|length >= 3 %}
-                <div id="form_question" style="display:none">
-                    {{ form.question_text2|as_crispy_field }}
-                </div>
-            {% endif %}
-
-            {% if question|length >= 4 %}
-                <div id="form_question" style="display:none">
-                    {{ form.question_text3|as_crispy_field }}
-                </div>
-            {% endif %}
-
-            {% if question|length >= 5 %}
-                <div id="form_question" style="display:none">
-                    {{ form.question_text4|as_crispy_field }}
-                </div>
-            {% endif %}
-
-            <button id="submitBtn" class="btn btn-primary btn-lg btn-block" type="submit">Submit</button>
-        </form>
-        <br>
+        <br><br/>
+        {% crispy form %}
+        <br><br/>
     </div>
 
 <script>
     $(document).ready(function() {
-        $("#form").submit(function(e) {
+        $("#form_question").submit(function(e) {
             e.preventDefault();
         });
 
         //Gets question object
         const question = JSON.parse(document.getElementById('quiz-question').textContent);
-
-        var listItems = $( "div[id='form_question']" );
-
-
-        var loop = 0;
+        //Gets a list of all the questions by id
+        var questionList = $( "div[id='form_question']" );
+        var hasGuessed = true;
         var score = 0;
+        var loop = 0;
+
+        // Hides all apart from the first question
+        for(let i = 1; i < questionList.length; i++){
+            $(questionList[i]).hide();
+        }
+
         $("#submitBtn").prop('disabled', true);
 
         // When option is selected able to submit
         $("[type='radio']").on('change',function(){
             $("#submitBtn").prop('disabled', false);});
 
-        var hasGuessed = true;
         $("#submitBtn").click(function(){
-            if(loop>=listItems.length){
-                console.log("fini");
+            //If retry button called clear data and show first question
+            if(loop>=questionList.length){
                 $(".score").remove();
-                $("#submitBtn").removeClass('btn-success').removeClass('btn-danger').addClass('btn-primary').text('Submit');
-                $('.form-check-label').each(function(){
-                    $(this).css('color','black');
-                });
+                $("#submitBtn").removeClass('btn-success').removeClass('btn-danger').addClass('btn-primary').prop('value','Submit');
+                $('.custom-control-label').css('color','black');
+                $("#submitBtn").prop('disabled', true);
                 loop = 0;
                 score = 0;
-                $(listItems[loop]).slideToggle("slow");
+                $(questionList[loop]).slideToggle("slow");
             } else {
+                // If the user has chosen an option
                 if (hasGuessed) {
+                    let selected_value = $("[type='radio']:checked").val();
+                    let label_text = $('label[for="' + "id_question_text" + loop + "_" + selected_value + '"]');
+                    let correct_answer = question[loop].correct;
 
-                    var selected_value = $("[type='radio']:checked").val();
-                    var label_text = $('label[for="' + "id_question_text" + loop + "_" + selected_value + '"]');
-
-                    var selected_answer = selected_value;
-                    var correct_answer = question[loop].correct;
-
-
-                    if (selected_answer == correct_answer) {
+                    // If option was correct increase score
+                    if (selected_value == correct_answer) {
                         label_text.css('color', 'green');
-                        $("#submitBtn").removeClass('btn-primary').addClass('btn-success').text('Correct');
+                        $("#submitBtn").removeClass('btn-primary').addClass('btn-success').prop('value', 'Correct');
                         score++;
                     } else {
+                        // If option was incorrect highlight wrong and right answers
                         label_text.effect("shake", {times: 2}, 300).css('color', 'red');
                         $('label[for="' + "id_question_text" + loop + "_" + correct_answer + '"]').css('color', 'green');
-                        $("#submitBtn").removeClass('btn-primary').addClass('btn-danger').text('Wrong');
+                        $("#submitBtn").removeClass('btn-primary').addClass('btn-danger').prop('value', 'Wrong');
                     }
                     hasGuessed = false;
                 } else {
+                    // Next click of the button will hide the previous question and display the next
                     $('input[type="radio"]').prop('checked', false);
-                    $("#submitBtn").removeClass('btn-success').removeClass('btn-danger').addClass('btn-primary').text('Submit');
-                    $(listItems[loop]).slideToggle("slow");
-                    $(listItems[loop + 1]).slideToggle("slow");
+                    $("#submitBtn").removeClass('btn-success').removeClass('btn-danger').addClass('btn-primary').prop('value', 'Submit');
+                    $(questionList[loop]).slideToggle("slow");
+                    $(questionList[loop + 1]).slideToggle("slow");
                     $("#submitBtn").prop('disabled', true);
                     loop++;
                     hasGuessed = true;
 
-                    if (loop >= listItems.length) {
-                        $("#submitBtn").after("<br> <p class='score'>You scored " + score + " out of " + listItems.length + " </p>").slideDown();
-                        $("#submitBtn").text('Retry...');
-                        console.log(listItems.length);
+                    // If last question display score and give option to restart
+                    if (loop >= questionList.length) {
+                        $("#submitBtn").after("<br> <p class='score'>You scored " + score + " out of " + questionList.length + " </p>").slideDown();
+                        $("#submitBtn").prop('value','Retry');
+                        console.log(questionList.length);
                         $("#submitBtn").prop('disabled', false);
                     }
                 }

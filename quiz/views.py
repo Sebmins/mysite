@@ -1,9 +1,5 @@
-from datetime import time
-
 from django.db import transaction
-from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
-from django.template import RequestContext
 from django.template.response import TemplateResponse
 from django.views.generic import ListView, DetailView, CreateView, DeleteView, FormView, UpdateView
 from .forms import VotingForm, CreateFormSet, EditFormSet
