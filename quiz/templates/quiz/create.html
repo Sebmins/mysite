@@ -13,7 +13,7 @@
             {{ form|crispy}}
             <br/>
         {%  endfor %}
-        <input class="btn btn-primary btn-md" type="submit" value="Create"/>
+        <input id='submitBtn' class="btn btn-primary btn-md" type="submit" value="Create"/>
         <a class="btn btn-link" href="{% url 'quiz:index' %}">Back to the list</a>
     </form>
     <br>

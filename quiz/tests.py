@@ -1,8 +1,12 @@
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.test import TestCase
 from django.urls import reverse
 from quiz.forms import QuestionForm
 from quiz.models import Quiz, QuizQuestion
-
+from selenium import webdriver
+from quiz.models import Quiz,QuizQuestion
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+import time
 
 # Test all static urls
 class URLTests(TestCase):
@@ -82,3 +86,46 @@ class FormTest(TestCase):
                                   'option3': 'Plasma',
                                   'option4': 'Solid', })
         self.assertFalse(form.is_valid())
+
+
+class TestProjectListPage(StaticLiveServerTestCase):
+
+    def setUp(self):
+        self.browser = webdriver.Chrome('quiz/chromedriver')
+
+    def tearDown(self):
+        self.browser.close()
+
+    def test_no_project_alert_is_displayed(self):
+        self.browser.get(self.live_server_url)
+        # time.sleep(20)
+
+        alert = self.browser.find_elements_by_tag_name('li')
+        self.assertEqual(alert[0].find_element_by_tag_name('a').text, 'quiz')
+        self.assertEqual(alert[1].find_element_by_tag_name('a').text, 'polls')
+
+    def test_quiz_click(self):
+        self.browser.get(self.live_server_url)
+
+        add_url = self.live_server_url + reverse('quiz:index')
+        create_url = self.live_server_url + reverse('quiz:create')
+        self.browser.find_element_by_tag_name('a').click()
+        time.sleep(1)
+        self.assertEqual(self.browser.current_url, add_url)
+        self.browser.find_element_by_class_name('create_quiz').click()
+        time.sleep(1)
+        self.assertEqual(self.browser.current_url, create_url)
+        self.browser.find_element_by_id('id_title').send_keys("Test Quiz")
+        self.browser.find_element_by_id('id_author').send_keys("Test Author")
+        self.browser.find_element_by_id('id_quizquestion_set-0-question_text').send_keys("Test Question")
+        self.browser.find_element_by_id('id_quizquestion_set-0-correct').send_keys("1")
+        self.browser.find_element_by_id('id_quizquestion_set-0-option1').send_keys("Test Option1")
+        self.browser.find_element_by_id('id_quizquestion_set-0-option2').send_keys("Test Option2")
+        self.browser.find_element_by_id('id_quizquestion_set-0-option3').send_keys("Test Option3")
+        self.browser.find_element_by_id('id_quizquestion_set-0-option4').send_keys("Test Option4")
+        self.browser.find_element_by_id('submitBtn').click()
+        self.assertEqual(self.browser.current_url, add_url)
+        indexList = self.browser.find_elements_by_tag_name('a')
+        self.assertEqual(indexList[0].text, 'Test Quiz')
+        indexList[0].click()
+        time.sleep(1)

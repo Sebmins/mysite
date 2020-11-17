@@ -26,9 +26,9 @@ class Quiz(models.Model):
 
 class QuizQuestion(models.Model):
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
-    question_text = models.CharField(max_length=100)
-    correct = models.IntegerField(blank=True, null=True, choices=One_to_Four)
-    option1 = models.CharField(max_length=50)
+    question_text = models.CharField(blank=True,max_length=100)
+    correct = models.IntegerField(choices=One_to_Four)
+    option1 = models.CharField(blank=True,max_length=50)
     option2 = models.CharField(max_length=50)
     option3 = models.CharField(max_length=50)
     option4 = models.CharField(max_length=50)

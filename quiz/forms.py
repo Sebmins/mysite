@@ -1,11 +1,13 @@
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Div, Field, Submit, ButtonHolder
+from crispy_forms.layout import Submit
 from django import forms
 from django.forms import ModelForm, inlineformset_factory
 from quiz.models import Quiz, QuizQuestion
 
 
 class QuestionForm(ModelForm):
+    question_text = forms.CharField(required=True, initial="Question")
+
     class Meta:
         model = QuizQuestion
         exclude = ('quiz',)
@@ -25,7 +27,7 @@ class VotingForm(forms.Form):
             self.helper = FormHelper()
             self.helper.form_id = 'form_question'
             self.helper.form_class = 'blueForms'
-            self.helper.add_input(Submit('submit','Submit',
+            self.helper.add_input(Submit('submit', 'Submit',
                                          css_id="submitBtn",
                                          css_class='btn btn-primary btn-lg btn-block'))
             self.fields['question_text' + str(i)] = forms.ChoiceField(

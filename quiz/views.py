@@ -72,7 +72,7 @@ class AddView(CreateView):
     def get_context_data(self, **kwargs):
         data = super(AddView, self).get_context_data(**kwargs)
         if self.request.POST:
-            data['quizquestion'] = CreateFormSet(self.request.POST)
+            data['quizquestion'] = CreateFormSet(self.request.POST, self.request.FILES)
         else:
             data['quizquestion'] = CreateFormSet()
         return data
@@ -86,8 +86,14 @@ class AddView(CreateView):
             if quizquestion.is_valid():
                 quizquestion.instance = self.object
                 quizquestion.save()
+                print("question valid")
+            else:
+                print("question invalid")
+
         return super(AddView, self).form_valid(form)
 
+    def form_invalid(self, form):
+        print("invalid form")
 
 class DeleteView(DeleteView):
     model = Quiz

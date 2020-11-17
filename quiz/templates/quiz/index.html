@@ -13,6 +13,6 @@
         {% else %}
             <p>No polls are available.</p>
         {% endif %}
-        <a href="{% url 'quiz:create' %}">Add new quiz</a>
+        <a class="create_quiz" href="{% url 'quiz:create' %}">Add new quiz</a>
     </div>
 {% endblock %}
