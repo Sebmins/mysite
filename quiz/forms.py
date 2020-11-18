@@ -12,9 +12,8 @@ class QuestionForm(ModelForm):
         model = QuizQuestion
         exclude = ('quiz',)
 
-
 EditFormSet = inlineformset_factory(Quiz, QuizQuestion, form=QuestionForm, extra=1)
-CreateFormSet = inlineformset_factory(Quiz, QuizQuestion, form=QuestionForm, extra=1)
+CreateFormSet = inlineformset_factory(Quiz, QuizQuestion, form=QuestionForm, extra=3)
 
 
 class VotingForm(forms.Form):

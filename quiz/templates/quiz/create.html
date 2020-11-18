@@ -4,25 +4,39 @@
 
 {% block content %}
     <form action="" method="post">{% csrf_token %}
-        {{ form|crispy}}
-        <br>
+        {{ form|crispy }}
 
         {{ quizquestion.management_form }}
 
-        {% for form in quizquestion %}
-            {{ form|crispy}}
-            <br/>
+        {% for question in quizquestion %}
+            <div id="question">
+                <br>
+                {{ question|crispy }}
+            </div>
         {%  endfor %}
+        <button id='new_question' class="btn btn-info btn-sm btn-block" type="button"/>Add Question</button>
+        <br/>
         <input id='submitBtn' class="btn btn-primary btn-md" type="submit" value="Create"/>
         <a class="btn btn-link" href="{% url 'quiz:index' %}">Back to the list</a>
     </form>
     <br>
-{% endblock %}
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-<script type="text/javascript">
-    $('.formset_row').formset({
-        addText: 'add family member',
-        deleteText: 'remove',
-        prefix: 'familymember_set'
+<script>
+    $(document).ready(function() {
+        var questionList = $( "div[id='question']" );
+        console.log(questionList);
+        for(let i = 1; i < questionList.length; i++){
+
+            $(questionList[i]).hide();
+        }
+        let loop = 1;
+
+        $("#new_question").click(function() {
+            {#$(questionList[loop-1]).slideUp();#}
+            $(questionList[loop]).slideDown();
+            loop++;
+            if(loop>=questionList.length)
+                $("#new_question").prop('disabled',true);
+        });
     });
 </script>
+{% endblock %}

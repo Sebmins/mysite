@@ -88,7 +88,7 @@ class FormTest(TestCase):
         self.assertFalse(form.is_valid())
 
 
-class TestProjectListPage(StaticLiveServerTestCase):
+class FunctionalTests(StaticLiveServerTestCase):
 
     def setUp(self):
         self.browser = webdriver.Chrome('quiz/chromedriver')
@@ -96,7 +96,8 @@ class TestProjectListPage(StaticLiveServerTestCase):
     def tearDown(self):
         self.browser.close()
 
-    def test_no_project_alert_is_displayed(self):
+
+    def test_index_page_displayed(self):
         self.browser.get(self.live_server_url)
         # time.sleep(20)
 
@@ -104,7 +105,7 @@ class TestProjectListPage(StaticLiveServerTestCase):
         self.assertEqual(alert[0].find_element_by_tag_name('a').text, 'quiz')
         self.assertEqual(alert[1].find_element_by_tag_name('a').text, 'polls')
 
-    def test_quiz_click(self):
+    def test_create_display(self):
         self.browser.get(self.live_server_url)
 
         add_url = self.live_server_url + reverse('quiz:index')
