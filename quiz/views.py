@@ -32,36 +32,6 @@ class QuizView(FormView, DetailView):
         quiz_id = self.kwargs.get("quiz_id")
         return get_object_or_404(Quiz, id=quiz_id)
 
-
-class ResultsView(DetailView):
-    template_name = 'quiz/results.html'
-    queryset = Quiz.objects.all()
-
-    def get_object(self):
-        quiz_id = self.kwargs.get("quiz_id")
-        return get_object_or_404(Quiz, id=quiz_id)
-
-    def post(self, request, *args, **wkwargs):
-        quiz_obj = get_object_or_404(Quiz, pk=self.kwargs.get("quiz_id"))
-        question = QuizQuestion.objects.filter(quiz=self.kwargs["quiz_id"])
-
-        selected_answers = []
-        try:
-            for i in range(question.count()):
-                selected_answers.append(int(request.POST['question_text'+str(i)]))
-
-            args = {
-                'answer_object': zip(selected_answers, question),
-                'quiz': quiz_obj,
-            }
-
-        except(KeyError, Quiz.DoesNotExist):
-            return render(request, 'quiz/votingError.html')
-        else:
-            quiz_obj.save()
-            return TemplateResponse(request, 'quiz/results.html', args)
-
-
 # Does take you to the newly created page once completed
 class AddView(CreateView):
     model = Quiz
